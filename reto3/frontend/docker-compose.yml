@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: .
+
+  swag:
+    image: linuxserver/swag
+    container_name: swag
+    depends_on:
+      - frontend
+    volumes:
+      - ./config:/config
+      - ./default:/config/nginx/site-confs/default
+    environment:
+      - URL=telematica-urrego-reto3.tk
+      - SUBDOMAINS=www
+      - VALIDATION=http
+      - TZ="America/Bogota"
+      - PUID=500
+      - PGID=500
+    ports:
+      - "443:443"
+      - "80:80"
+
+volumes:
+  data:
+  log:
