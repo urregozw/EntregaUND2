@@ -2,8 +2,6 @@ services:
   wordpress:
     image: wordpress
     restart: always
-    ports:
-      - 80:80
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: exampleuser
@@ -21,6 +19,24 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
     volumes:
       - db:/var/lib/mysql
+  swag:
+    image: linuxserver/letsencrypt
+    container_name: swag
+    depends_on:
+      - wordpress
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - URL=und2telematica.tk
+      - SUBDOMAINS=www
+      - VALIDATION=http
+    volumes:
+      - ./config:/config
+      - ./default:/config/nginx/site-confs/default
+    ports:
+      - 443:443
+      - 80:80
 volumes:
   wordpress:
   db:
